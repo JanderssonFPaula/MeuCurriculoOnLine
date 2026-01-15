@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jandersson Ferreira de Paula - CV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            background: linear-gradient(45deg, #00d4ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .header .subtitle {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .contact-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .contact-links a:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 50px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover, .tab-btn.active {
+            background: linear-gradient(45deg, #00d4ff, #7b2ff7);
+            border-color: transparent;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
+        }
+
+        .card h3 {
+            color: #00d4ff;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .card h4 {
+            color: #7b2ff7;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+
+        .card .date {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+            transform: scale(1.05);
+        }
+
+        .skill-card h4 {
+            color: #00d4ff;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .skill-level {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(123, 47, 247, 0.3);
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        .download-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 20px 40px;
+            background: linear-gradient(45deg, #00d4ff, #7b2ff7);
+            border: none;
+            border-radius: 50px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+            z-index: 1000;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 40px rgba(123, 47, 247, 0.6);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        ul li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            font-size: 1.2em;
+        }
+
+        .cert-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5em;
+            }
+            
+            .header .subtitle {
+                font-size: 1.2em;
+            }
+
+            .download-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 15px 30px;
+                font-size: 1em;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Jandersson Ferreira de Paula</h1>
+            <div class="subtitle">Assistente de Dados | Desenvolvedor Full Stack</div>
+            <div class="contact-links">
+                <a href="mailto:jandersson.fp@outlook.com">📧 Email</a>
+                <a href="https://www.linkedin.com/in/janderssonferreira-de-paula-891843110/" target="_blank">💼 LinkedIn</a>
+                <a href="https://github.com/JanderssonFPaula" target="_blank">💻 GitHub</a>
+                <a href="https://wa.me/5562981240493" target="_blank">📱 WhatsApp</a>
+            </div>
+            <div style="margin-top: 20px; color: #888;">
+                📍 Goiânia, GO | 🇧🇷 Brasileiro | 💍 Solteiro | 🚗 CNH A/B
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('experience', this)">Experiência</button>
+            <button class="tab-btn" onclick="showTab('education', this)">Educação</button>
+            <button class="tab-btn" onclick="showTab('skills', this)">Habilidades</button>
+            <button class="tab-btn" onclick="showTab('certificates', this)">Certificados</button>
+        </div>
+
+        <div id="experience" class="content-section active">
+            <div class="card">
+                <h3>Assistente de Dados</h3>
+                <h4>Equatorial Goiás</h4>
+                <div class="date">Janeiro 2024 - Presente | Goiânia, Brasil</div>
+                <p style="margin-bottom: 15px; line-height: 1.8;">Atuação na análise de dados e apoio à tomada de decisão, transformando dados brutos em insights estratégicos para áreas de negócio.</p>
+                <ul>
+                    <li>Desenvolvimento de dashboards interativos no Power BI, utilizando DAX e modelagem de dados, garantindo clareza e performance na visualização das informações</li>
+                    <li>Extração e tratamento de dados a partir de múltiplas fontes utilizando SQL, Python e Supermetrics</li>
+                    <li>Criação e manutenção de pipelines de ETL com SSIS, Talend, Apache Hop e Python, assegurando qualidade, consistência e atualização dos dados</li>
+                    <li>Automação de processos operacionais e rotinas analíticas com Power Automate, N8N e VBA, reduzindo tempo manual e erros operacionais</li>
+                    <li>Desenvolvimento de aplicações low-code para controle e análise de dados utilizando Power Apps, AppSheet, Oracle Apex</li>
+                    <li>Versionamento de código e controle de projetos utilizando Git, GitHub e GitLab, seguindo boas práticas de organização e colaboração</li>
+                    <li>Apoio direto a áreas de negócio na definição de KPIs, métricas e indicadores estratégicos</li>
+                    <li>Criação de relatórios analíticos e executivos para acompanhamento de performance e identificação de oportunidades de melhoria</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Assistente Comercial - Geração Distribuída</h3>
+                <h4>Equatorial Goiás</h4>
+                <div class="date">Março 2023 - Janeiro 2024 | Goiânia, Brasil</div>
+                <ul>
+                    <li>Consolidação e tratamento de dados de diversos clientes, gerando relatórios completos e precisos para suportar tomada de decisões</li>
+                    <li>Monitoramento dos prazos de execução de serviços, garantindo que os entregáveis estejam dentro do escopo e prazo acordados com o cliente</li>
+                    <li>Auxílio ao consultor nas análises e recomendações em projetos</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Analista Atendimento / Supervisor de Operação</h3>
+                <h4>AUDAC</h4>
+                <div class="date">Maio 2019 - Março 2023 | Goiânia, Brasil</div>
+                <ul>
+                    <li>Tratativa de reclamações e ouvidorias, elaboração de relatórios e gestão de todo o processo de geração distribuída</li>
+                    <li>Responsável pela implementação de processos de melhoria contínua para aumentar a eficiência da equipe</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>BackOffice</h3>
+                <h4>Logos Teleatendimento</h4>
+                <div class="date">Março 2018 - Maio 2019 | Goiânia, Brasil</div>
+                <ul>
+                    <li>Forneceu suporte para os atendentes das lojas ENEL no estado de Goiás em relação a procedimentos e serviços de nível supervisor/gerente</li>
+                    <li>Realizou relatórios e análises para ajudar a melhorar o desempenho da equipe</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Operador de Telemarketing</h3>
+                <h4>Personal Service</h4>
+                <div class="date">Novembro 2017 - Março 2018 | Goiânia, Brasil</div>
+                <ul>
+                    <li>Realizou atendimento ao cliente presencialmente na Enel Goiás</li>
+                    <li>Auxiliou na organização e manutenção de registros e documentos importantes</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Estágio</h3>
+                <h4>Celg Distribuição</h4>
+                <div class="date">Setembro 2015 - Setembro 2017 | Goiânia, Brasil</div>
+                <ul>
+                    <li>Realizou atendimento ao cliente presencialmente na Celg Distribuição</li>
+                    <li>Auxiliou na organização e manutenção de registros e documentos importantes</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Assistente de TI</h3>
+                <h4>BT Call Center</h4>
+                <div class="date">Março 2013 - Julho 2016 | Goiânia, Brasil</div>
+                <ul>
+                    <li>Analisou erros na instalação de planos nas linhas dos clientes e auditoria do atendimento realizado ao cliente</li>
+                    <li>Habilidade em lidar com problemas técnicos de maneira eficaz</li>
+                    <li>Participou de projetos de melhoria de processos</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="education" class="content-section">
+            <div class="card">
+                <h3>Análise e Desenvolvimento de Sistemas</h3>
+                <h4>Centro Universitário União das Américas Descomplica</h4>
+                <div class="date">Janeiro 2024 - Cursando | Goiânia, Brasil</div>
+                <p>Curso focado em desenvolvimento de sistemas, programação e análise de requisitos.</p>
+            </div>
+
+            <div class="card">
+                <h3>Administração</h3>
+                <h4>Universidade Estadual de Goiás</h4>
+                <div class="date">Janeiro 2020 - Cursando | Aparecida de Goiânia, Brasil</div>
+                <p>Formação em gestão empresarial, administração de recursos e processos organizacionais.</p>
+            </div>
+        </div>
+
+        <div id="skills" class="content-section">
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <h4>SQL</h4>
+                    <span class="skill-level">Intermediário</span>
+                    <p style="margin-top: 10px;">Cursando SQL, com habilidades em consulta e manipulação de dados em bancos de dados relacionais. Conhecimento em estruturas de banco de dados e normalização.</p>
+                    <p style="margin-top: 10px; color: #00d4ff;"><strong>Exemplo:</strong> Criei consultas SQL complexas para extrair informações de um banco de dados de clientes, que foram usadas para criar um sistema de gerenciamento de relacionamento com o cliente.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>Excel</h4>
+                    <span class="skill-level">Avançado</span>
+                    <p style="margin-top: 10px;">Nível avançado em Excel, incluindo experiência com Macro, tratativa de dados, VBA, Web scraping e Selenium. Capaz de criar planilhas complexas e solucionar problemas.</p>
+                    <p style="margin-top: 10px; color: #00d4ff;"><strong>Exemplo:</strong> Criei um sistema automatizado de relatórios para minha equipe usando VBA, que economizou mais de 20 horas de trabalho manual por semana.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>Python</h4>
+                    <span class="skill-level">Intermediário</span>
+                    <p style="margin-top: 10px;">Cursando Python, com habilidades em programação básica e manipulação de dados. Conhecimento em bibliotecas como Pandas, NumPy e Matplotlib.</p>
+                    <p style="margin-top: 10px; color: #00d4ff;"><strong>Exemplo:</strong> Usei Python para coletar dados de uma API e criei visualizações de dados interativas usando a biblioteca Matplotlib.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>PowerPoint</h4>
+                    <span class="skill-level">Intermediário</span>
+                    <p style="margin-top: 10px;">Habilidade em criação de apresentações visualmente atraentes e eficazes. Conhecimento em recursos avançados como animação de objetos e gráficos.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>Power Apps</h4>
+                    <span class="skill-level">Intermediário</span>
+                    <p style="margin-top: 10px;">Experiente em projetar e desenvolver aplicativos personalizados usando o Power Apps. Habilidade em criar interfaces de usuário, integrar fontes de dados e implementar lógica personalizada usando o PowerFX. Capacidade em personalização avançada, integração com o Microsoft 365 e otimização para dispositivos móveis. Solucionador de problemas eficaz e comunicador colaborativo. Comprometido com aprendizado contínuo e adaptação aos novos recursos do Power Apps.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>Power BI</h4>
+                    <span class="skill-level">Intermediário</span>
+                    <p style="margin-top: 10px;">Cursando Power BI, com habilidades em tratamento de dados e linguagem DAX. Capaz de criar visualizações de dados dinâmicas e relatórios interativos.</p>
+                    <p style="margin-top: 10px; color: #00d4ff;"><strong>Exemplo:</strong> Criei um dashboard de monitoramento no Power BI que permitiu a minha equipe identificar padrões de comportamento do cliente evitando gargalos no processo.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>Word</h4>
+                    <span class="skill-level">Intermediário</span>
+                    <p style="margin-top: 10px;">Habilidade em mala direta, criação de modelos e formatação de documentos. Conhecimento em recursos avançados como rastreamento de alterações e proteção de documentos.</p>
+                </div>
+
+                <div class="skill-card">
+                    <h4>HTML / CSS / JavaScript</h4>
+                    <span class="skill-level">Iniciante</span>
+                    <p style="margin-top: 10px;">Adquirindo habilidades em desenvolvimento web front-end através do domínio de HTML, CSS e JavaScript para criar interfaces interativas e responsivas.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="certificates" class="content-section">
+            <div class="card">
+                <h3>Certificações e Cursos</h3>
+                
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Gestão de Projetos 1: Como trabalhar com projetos?</h4>
+                    <p style="color: #888;">Fundação Bradesco - Novembro de 2017 - Concluído</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Power Apps - Aplicações Práticas</h4>
+                    <p style="color: #888;">Hashtag Treinamentos - 20 de Junho de 2023 - Concluído</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Programmer</h4>
+                    <p style="color: #888;">Análise e Desenvolvimento de Sistemas - Descomplica</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Ferramentas e Aplicações da Inteligência Artificial</h4>
+                    <p style="color: #888;">Análise e Desenvolvimento de Sistemas - Descomplica</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Full Cycle Developer</h4>
+                    <p style="color: #888;">Fundamentos de Computação em Nuvem, Monitoramento</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Gestão de Projetos 2: Como mapear processo e identificar melhorias?</h4>
+                    <p style="color: #888;">Universidade Estadual de Goiás - 2018 - Concluído</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Marketing Digital - Cresça com o Google</h4>
+                    <p style="color: #888;">Google Brasil - 2019 - Concluído</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Object-Oriented Developer</h4>
+                    <p style="color: #888;">Análise e Desenvolvimento de Sistemas - Descomplica</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Modelo de Gestão</h4>
+                    <p style="color: #888;">Administração - Descomplica</p>
+                </div>
+
+                <div class="cert-item">
+                    <h4 style="color: #00d4ff; font-size: 1.1em;">Full Stack Developer</h4>
+                    <p style="color: #888;">Framework, Prática Integradora Desenvolvimento de Apps</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="download-btn" onclick="downloadPDF()">⬇ Baixar PDF</button>
+
+    <script>
+        // Create stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // Tab navigation
+        function showTab(tabName, element) {
+            const sections = document.querySelectorAll('.content-section');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            sections.forEach(section => section.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+
+        // PDF Download
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            let y = 20;
+            const lineHeight = 6;
+            const margin = 15;
+            const pageHeight = 280;
+            
+            function addText(text, fontSize, isBold = false) {
+                if (y > pageHeight) {
+                    pdf.addPage();
+                    y = 20;
+                }
+                pdf.setFontSize(fontSize);
+                pdf.setFont(undefined, isBold ? 'bold' : 'normal');
+                const lines = pdf.splitTextToSize(text, 180);
+                lines.forEach(line => {
+                    if (y > pageHeight) {
+                        pdf.addPage();
+                        y = 20;
+                    }
+                    pdf.text(line, margin, y);
+                    y += lineHeight;
+                });
+            }
+            
+            // Header
+            addText('JANDERSSON FERREIRA DE PAULA', 18, true);
+            addText('Assistente de Dados | Desenvolvedor Full Stack', 12, false);
+            y += 5;
+            
+            // Contact
+            addText('CONTATO', 12, true);
+            addText('Email: jandersson.fp@outlook.com', 10, false);
+            addText('WhatsApp: +55 62 98124-0493', 10, false);
+            addText('LinkedIn: linkedin.com/in/janderssonferreira-de-paula-891843110', 10, false);
+            addText('GitHub: github.com/JanderssonFPaula', 10, false);
+            addText('Localização: Goiânia, GO | Brasileiro | Solteiro | CNH A/B', 10, false);
+            y += 5;
+            
+            // Experience
+            addText('EXPERIÊNCIA PROFISSIONAL', 12, true);
+            y += 2;
+            
+            addText('Assistente de Dados | Equatorial Goiás', 11, true);
+            addText('Janeiro 2024 - Presente | Goiânia, Brasil', 9, false);
+            addText('• Desenvolvimento de dashboards interativos no Power BI com DAX', 9, false);
+            addText('• Extração e tratamento de dados com SQL, Python e Supermetrics', 9, false);
+            addText('• Criação de pipelines ETL com SSIS, Talend, Apache Hop e Python', 9, false);
+            addText('• Automação de processos com Power Automate, N8N e VBA', 9, false);
+            addText('• Desenvolvimento low-code (Power Apps, AppSheet, Oracle Apex)', 9, false);
+            addText('• Versionamento com Git, GitHub e GitLab', 9, false);
+            addText('• Definição de KPIs e indicadores estratégicos', 9, false);
+            addText('• Relatórios analíticos e executivos', 9, false);
+            y += 3;
+            
+            addText('Assistente Comercial - Geração Distribuída | Equatorial Goiás', 11, true);
+            addText('Março 2023 - Janeiro 2024 | Goiânia, Brasil', 9, false);
+            addText('• Consolidação e tratamento de dados de clientes', 9, false);
+            addText('• Monitoramento de prazos de execução de serviços', 9, false);
+            addText('• Auxílio em análises e recomendações de projetos', 9, false);
+            y += 3;
+            
+            addText('Analista Atendimento / Supervisor | AUDAC', 11, true);
+            addText('Maio 2019 - Março 2023 | Goiânia, Brasil', 9, false);
+            addText('• Tratativa de reclamações e ouvidorias', 9, false);
+            addText('• Gestão de processos de geração distribuída', 9, false);
+            addText('• Implementação de melhorias contínuas', 9, false);
+            y += 3;
+            
+            addText('BackOffice | Logos Teleatendimento', 11, true);
+            addText('Março 2018 - Maio 2019 | Goiânia, Brasil', 9, false);
+            addText('• Suporte para atendentes das lojas ENEL em Goiás', 9, false);
+            addText('• Relatórios e análises para melhoria de desempenho', 9, false);
+            y += 3;
+            
+            addText('Assistente de TI | BT Call Center', 11, true);
+            addText('Março 2013 - Julho 2016 | Goiânia, Brasil', 9, false);
+            addText('• Análise de erros e auditoria de atendimento', 9, false);
+            addText('• Projetos de melhoria de processos', 9, false);
+            y += 5;
+            
+            // Education
+            addText('EDUCAÇÃO', 12, true);
+            y += 2;
+            addText('Análise e Desenvolvimento de Sistemas', 11, true);
+            addText('Centro Universitário Descomplica | 2024 - Cursando', 9, false);
+            y += 2;
+            addText('Administração', 11, true);
+            addText('Universidade Estadual de Goiás | 2020 - Cursando', 9, false);
+            y += 5;
+            
+            // Skills
+            addText('HABILIDADES', 12, true);
+            y += 2;
+            addText('SQL (Intermediário) - Consultas complexas e manipulação de dados', 9, false);
+            addText('Excel (Avançado) - VBA, Macros, Web Scraping, Selenium', 9, false);
+            addText('Python (Intermediário) - Pandas, NumPy, Matplotlib', 9, false);
+            addText('Power BI (Intermediário) - DAX, dashboards interativos', 9, false);
+            addText('Power Apps (Intermediário) - PowerFX, integração Microsoft 365', 9, false);
+            addText('PowerPoint (Intermediário) - Apresentações avançadas', 9, false);
+            addText('Word (Intermediário) - Mala direta, modelos avançados', 9, false);
+            addText('HTML/CSS/JavaScript (Iniciante) - Desenvolvimento web front-end', 9, false);
+            y += 5;
+            
+            // Certificates
+            addText('CERTIFICAÇÕES', 12, true);
+            y += 2;
+            addText('• Power Apps - Aplicações Práticas (Hashtag, 2023)', 9, false);
+            addText('• Marketing Digital - Cresça com Google (Google Brasil, 2019)', 9, false);
+            addText('• Gestão de Projetos 1 e 2 (Fundação Bradesco, 2017-2018)', 9, false);
+            addText('• Ferramentas de Inteligência Artificial (Descomplica)', 9, false);
+            addText('• Full Cycle Developer - Computação em Nuvem', 9, false);
+            addText('• Programmer (Descomplica)', 9, false);
+            addText('• Object-Oriented Developer (Descomplica)', 9, false);
+            addText('• Full Stack Developer - Framework e Apps (Descomplica)', 9, false);
+            addText('• Modelo de Gestão - Administração (Descomplica)', 9, false);
+            
+            pdf.save('CV_Jandersson_Ferreira_de_Paula.pdf');
+        }
+    </script>
+</body>
+</html>
